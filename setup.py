@@ -14,7 +14,26 @@
 
 import setuptools
 
+import sys
+
+from setuptools.command.install import install
+
 import versioneer
+
+class VerifyNoBentoML(install):
+    def run(self):
+        try:
+            import bentoml 
+            if "dist" in bentoml.__file__:
+                sys.exit(
+                    "Error: bentoml is already installed. "
+                    "Please uninstall bentoml before installing sinaraml-bentoml."
+                )
+
+        except ImportError:
+            pass
+        install.run(self)
+        #versioneer.get_cmdclass()
 
 with open("README.md", "r", encoding="utf8") as f:
     long_description = f.read()
@@ -134,18 +153,20 @@ extras_require = {
 }
 
 setuptools.setup(
-    name="BentoML",
-    version=versioneer.get_version(),
-    cmdclass=versioneer.get_cmdclass(),
-    author="bentoml.org",
-    author_email="contact@bentoml.ai",
+    name="sinaraml-bentoml",
+    version="0.13.2.1",#versioneer.get_version(),
+    cmdclass={
+        'install': VerifyNoBentoML,
+    },
+    author="sinaraml",
+    author_email="sinaraml.official@gmail.com",
     description="A framework for machine learning model serving",
     long_description=long_description,
     license="Apache License 2.0",
     long_description_content_type="text/markdown",
     install_requires=install_requires,
     extras_require=extras_require,
-    url="https://github.com/bentoml/BentoML",
+    url="",
     packages=setuptools.find_packages(exclude=["tests*"]),
     classifiers=[
         "License :: OSI Approved :: Apache Software License",
@@ -159,9 +180,6 @@ setuptools.setup(
     python_requires=">=3.6.1",
     entry_points={"console_scripts": ["bentoml=bentoml:commandline_interface"]},
     project_urls={
-        "Bug Reports": "https://github.com/bentoml/BentoML/issues",
-        "BentoML User Slack Group": "https://bit.ly/2N5IpbB",
-        "Source Code": "https://github.com/bentoml/BentoML",
     },
     include_package_data=True,  # Required for '.cfg' files under bentoml/config
 )
