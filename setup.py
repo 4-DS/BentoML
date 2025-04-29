@@ -42,7 +42,7 @@ install_requires = [
     "aiohttp",
     "aiohttp_cors==0.7.0",
     "alembic",
-    "urllib3>=1.26.5,<1.27.0",
+    "urllib3",
     "boto3",
     "cerberus",
     "certifi",
@@ -154,7 +154,7 @@ extras_require = {
 
 setuptools.setup(
     name="sinaraml-bentoml",
-    version="0.13.2.1",#versioneer.get_version(),
+    version="0.13.2.2",#versioneer.get_version(),
     cmdclass={
         'install': VerifyNoBentoML,
     },
